@@ -4,12 +4,6 @@
       "api/**.js": {
         "runtime": "nodejs16.x"
       }
-    },
-    "builds": [
-      {
-        "src": "api/ip.js",
-        "use": "@vercel/node"
-      }
-    ]
+    }
   }
   
