@@ -3,13 +3,16 @@
     "builds": [
       {
         "src": "server.js",
-        "use": "@vercel/node",
-        "config": { "runtime": "nodejs18.x" }
+        "use": "@vercel/node"
       }
     ],
     "routes": [
       {
-        "src": "/(.*)",
+        "src": "/track",
+        "dest": "server.js"
+      },
+      {
+        "src": "/",
         "dest": "server.js"
       }
     ]

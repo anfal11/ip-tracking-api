@@ -2,15 +2,22 @@ const express = require('express');
 const fs = require('fs');
 const app = express();
 
-app.get('/track', (req, res) => {
-  const ip = req.ip || req.connection.remoteAddress;
-  const data = { ip, timestamp: new Date().toISOString() };
-
-  // Save to a file (e.g., ips.log)
-  fs.appendFileSync('ips.log', JSON.stringify(data) + '\n');
-
-  // Return a 1x1 transparent pixel
-  res.sendFile(__dirname + '/pixel.png');
+// Root route
+app.get('/', (req, res) => {
+  res.send('IP Logger API - Use /track to log IPs');
 });
 
-app.listen(3000, () => console.log('Running on http://localhost:3000'));
+// IP Logger route
+app.get('/track', (req, res) => {
+  const ip = req.headers['x-forwarded-for'] || req.ip;
+  const log = `IP: ${ip}, Time: ${new Date().toISOString()}\n`;
+  
+  // Log to file and console
+  fs.appendFileSync('ips.log', log);
+  console.log(log);
+
+  // Return a 1x1 pixel or JSON
+  res.status(200).json({ success: true, ip });
+});
+
+module.exports = app;  // For Vercel compatibility
