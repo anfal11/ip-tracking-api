@@ -1,0 +1,7 @@
+{
+    "version": 2,
+    "functions": {
+      "api/ip.js": { "runtime": "nodejs18.x" }
+    }
+  }
+  
