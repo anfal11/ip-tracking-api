@@ -1,23 +1,16 @@
-const express = require("express");
-const cors = require("cors");
-const fs = require("fs");
-
+const express = require('express');
+const fs = require('fs');
 const app = express();
-const PORT = 3000;
 
-app.use(cors());
+app.get('/track', (req, res) => {
+  const ip = req.ip || req.connection.remoteAddress;
+  const data = { ip, timestamp: new Date().toISOString() };
 
-app.get("/", (req, res) => {
-    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-    const log = `IP: ${ip}, Time: ${new Date().toISOString()}\n`;
+  // Save to a file (e.g., ips.log)
+  fs.appendFileSync('ips.log', JSON.stringify(data) + '\n');
 
-    // Save IP to a log file
-    fs.appendFileSync("ips.log", log);
-
-    console.log(log);
-    res.send("IP Logged Successfully!");
+  // Return a 1x1 transparent pixel
+  res.sendFile(__dirname + '/pixel.png');
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running at https://ip-anfal-logger.vercel.app:${PORT}`);
-});
+app.listen(3000, () => console.log('Running on http://localhost:3000'));
